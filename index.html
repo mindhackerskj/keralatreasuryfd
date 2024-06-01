@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Centered Box Example</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f8ff; /* Light blue background */
+            font-family: Arial, sans-serif;
+        }
+        .center-box {
+            width: 300px;
+            background-color: #ffffff; /* White box */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Light shadow for depth */
+            border-radius: 10px; /* Rounded corners */
+            text-align: center;
+            padding: 20px;
+        }
+        .center-box h1 {
+            margin: 0;
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #333;
+        }
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+        }
+        .button-container button {
+            width: 45%;
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .button-container .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+        .button-container .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+        .button-container .active {
+            border: 2px solid #333;
+        }
+        .form-container {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+        }
+        .form-container input, .form-container select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .form-container button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+        }
+        .result-container {
+            margin-top: 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="center-box">
+        <h1>Kerala Treasury FD</h1>
+        <div class="button-container">
+            <button class="btn-primary" onclick="showForm('login', this)">Button 1</button>
+            <button class="btn-secondary" onclick="showForm('signup', this)">Button 2</button>
+        </div>
+        <div id="login-form" class="form-container">
+            <h2>Login</h2>
+            <input type="text" id="amount" placeholder="Amount">
+            <select id="interest">
+                <option value=""  selected>Current FD Interest</option>
+                <option value="5.4">5.4%</option>
+                <option value="5.9">5.9%</option>
+                <option value="6.4">6.4%</option>
+                <option value="7">7%</option>
+                <option value="7.5">7.5%</option>
+            </select>
+            <input type="text" id="date1" placeholder="FD start date(dd-mm-yyyy)">
+            <input type="text" id="date2" placeholder="FD closing date (dd-mm-yyyy)">
+            
+            <button onclick="calculateDateDifference()">Login</button>
+            <div id="result" class="result-container"></div>
+        </div>
+        <div id="signup-form" class="form-container">
+            <h2>Sign Up</h2>
+            <input type="text" placeholder="Username">
+            <input type="email" placeholder="Email">
+            <input type="password" placeholder="Password">
+            <button>Sign Up</button>
+        </div>
+    </div>
+
+    <script>
+        function showForm(formType, button) {
+            document.getElementById('login-form').style.display = 'none';
+            document.getElementById('signup-form').style.display = 'none';
+            document.getElementById('result').style.display = 'none'; // Hide result container on form change
+            if (formType === 'login') {
+                document.getElementById('login-form').style.display = 'flex';
+            } else if (formType === 'signup') {
+                document.getElementById('signup-form').style.display = 'flex';
+            }
+
+            // Highlight the selected button
+            const buttons = document.querySelectorAll('.button-container button');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+        }
+
+        function calculateDateDifference() {
+            const date1 = document.getElementById('date1').value;
+            const date2 = document.getElementById('date2').value;
+
+            // Convert the dates from dd-mm-yyyy to Date objects
+            const [day1, month1, year1] = date1.split('-');
+            const [day2, month2, year2] = date2.split('-');
+            const firstDate = new Date(`${year1}-${month1}-${day1}`);
+            const secondDate = new Date(`${year2}-${month2}-${day2}`);
+
+            // Calculate the difference in time
+            const differenceInTime = secondDate - firstDate;
+            // Calculate the difference in days
+            const differenceInDays = differenceInTime / (1000 * 3600 * 24);
+
+            // Display the result
+            const resultContainer = document.getElementById('result');
+            resultContainer.style.display = 'block';
+            resultContainer.innerHTML = `Difference: ${differenceInDays} days`;
+        }
+    </script>
+</body>
+</html>
