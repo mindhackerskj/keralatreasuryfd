@@ -77,19 +77,28 @@
             margin-top: 20px;
             display: none;
         }
+
+        #id{
+            width: 200px;
+        }
+
+        #result{
+            color: red;
+        }
     </style>
 </head>
 <body>
     <div class="center-box">
         <h1>Kerala Treasury FD</h1>
         <div class="button-container">
-            <button class="btn-primary" onclick="showForm('login', this)">Button 1</button>
+            <button class="btn-primary" onclick="showForm('login', this)">EPI</button>
             <button class="btn-secondary" onclick="showForm('signup', this)">Button 2</button>
         </div>
         <div id="login-form" class="form-container">
             <h2>Login</h2>
-            <input type="text" id="amount" placeholder="Amount">
-            <select id="interest">
+            <form>
+            <input type="text" id="amount" placeholder="Amount" required>
+            <select id="interest" required>
                 <option value=""  selected>Current FD Interest</option>
                 <option value="5.4">5.4%</option>
                 <option value="5.9">5.9%</option>
@@ -97,11 +106,14 @@
                 <option value="7">7%</option>
                 <option value="7.5">7.5%</option>
             </select>
-            <input type="text" id="date1" placeholder="FD start date(dd-mm-yyyy)">
-            <input type="text" id="date2" placeholder="FD closing date (dd-mm-yyyy)">
-            
-            <button onclick="calculateDateDifference()">Login</button>
-            <div id="result" class="result-container"></div>
+            <input type="text" id="date1" placeholder="FD start date(dd-mm-yyyy)" required>
+            <input type="text" id="date2" placeholder="FD closing date (dd-mm-yyyy)" required>
+        </form>
+            <button id="calc" onclick="calculateDateDifference()">Calculate EPI</button>
+       
+            <p id="demo1"></p>
+            <p id="demo2"></p>
+            <h1 id="result" class="result-container"></h1>
         </div>
         <div id="signup-form" class="form-container">
             <h2>Sign Up</h2>
@@ -128,10 +140,32 @@
             buttons.forEach(btn => btn.classList.remove('active'));
             button.classList.add('active');
         }
+        
+        function excessint(a,c,p,d){
+                  var a= Number(a);
+                  var p = Number(p);
+                  var c=Number(c);
+                  var d=Number(d);
+                  var t=p-1;
+                  var actual=(a*c*d)/(365*100);
+                  var current=(a*t*d)/(365*100);  
+                  var e=actual-current;
+                  document.getElementById("demo1").innerHTML=`Paid interest for ${d} days is ${parseInt(actual)} Rupees`;
+                  document.getElementById("demo2").innerHTML=`Penalty percentage: ${t}`;
+                
+            return parseInt(e);
+             
+            }
 
         function calculateDateDifference() {
+            
             const date1 = document.getElementById('date1').value;
             const date2 = document.getElementById('date2').value;
+            const amount = document.getElementById('amount').value;
+            const currint = document.getElementById('interest').value;
+            
+           
+            
 
             // Convert the dates from dd-mm-yyyy to Date objects
             const [day1, month1, year1] = date1.split('-');
@@ -143,11 +177,38 @@
             const differenceInTime = secondDate - firstDate;
             // Calculate the difference in days
             const differenceInDays = differenceInTime / (1000 * 3600 * 24);
+            
+
+            if (differenceInDays<=60 ){
+                   interest=5.4;
+                   ep=excessint(amount,currint,interest,differenceInDays);
+                   
+
+            } else if(differenceInDays>60 && differenceInDays<=90){
+                  interest=5.9;
+                   ep=excessint(amount,currint,interest,differenceInDays);
+                 
+            }
+            else if(differenceInDays>90 && differenceInDays<=366){
+                  interest=6.4;
+                   ep=excessint(amount,currint,interest,differenceInDays);
+            }
+            else if(differenceInDays>366 && differenceInDays<=732){
+                  interest=7;
+                   ep=excessint(amount,currint,interest,differenceInDays);
+            }
+            else{
+                  interest=7.5;
+                  ep=excessint(amount,currint,interest,differenceInDays);
+            }
+
 
             // Display the result
             const resultContainer = document.getElementById('result');
             resultContainer.style.display = 'block';
-            resultContainer.innerHTML = `Difference: ${differenceInDays} days`;
+            resultContainer.innerHTML = `Epi: ${ep} Rupees`;
+            
+            
         }
     </script>
 </body>
